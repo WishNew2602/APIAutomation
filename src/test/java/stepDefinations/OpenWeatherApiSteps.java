@@ -2,6 +2,7 @@ package stepDefinations;
 import static org.junit.Assert.assertEquals;
 
 import Payloads.Utils;
+import com.WebApi.com.MapsApi.OpenWeatherAPI;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -11,6 +12,7 @@ import io.restassured.specification.RequestSpecification;
 public class OpenWeatherApiSteps extends Utils{
     private RequestSpecification request;
     private Response response;
+    private OpenWeatherAPI openWeatherAPI;
 
     @Given("I have built GET request")
     public void i_have_built_get_request() {
@@ -28,10 +30,12 @@ public class OpenWeatherApiSteps extends Utils{
     @When("I Get Response from API")
     public void i_get_response_from_api() {
         response = request.when().get("/weather").then().spec(commResSpec()).extract().response();
+        openWeatherAPI = response.as(OpenWeatherAPI.class);
+        System.out.println(openWeatherAPI.getCoord().getLat());
     }
     @Then("^I verify the (.+) in Response$")
     public void i_verify_the_city_in_response(String expectedCity) {
-        String actualCity = response.jsonPath().getString("name");
+        String actualCity = openWeatherAPI.getName();
         assertEquals(expectedCity, actualCity);
     }
 }

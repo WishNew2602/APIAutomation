@@ -46,6 +46,7 @@ public class Utils {
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
+//		ConfigureVariable configureVariable = new
 		req = RestAssured.with().baseUri("http://api.openweathermap.org/data/2.5")
         		.header("Content-Type", "application/json");
         return req;
