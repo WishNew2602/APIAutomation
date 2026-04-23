@@ -1,0 +1,52 @@
+name: Selenium And API Testing - E2E Testing
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+  schedule:
+    - cron: '0 2 * * *'  # Daily at 2 AM UTC
+  workflow_dispatch:
+    inputs:
+      tags:
+        description: 'TestNG groups to run (comma separated)'
+        required: false
+        default: 'smoke'
+
+jobs:
+  run-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+          cache: 'maven'
+
+      - name: Install dependencies
+        run: mvn clean install -DskipTests
+
+      - name: Run Selenium TestNG Tests
+        run: |
+          mvn test \
+          -Dgroups=${{ github.event.inputs.tags || 'smoke' }} \
+          -DthreadCount=${{ github.event.inputs.threads || '4' }}
+        continue-on-error: true
+
+      # Upload Surefire Reports (default TestNG reports)
+      - name: Upload Test Reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: testng-reports
+          path: |
+            target/surefire-reports/
+            target/test-output/
+          retention-days: 7
