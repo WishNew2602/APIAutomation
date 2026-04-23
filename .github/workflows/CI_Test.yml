@@ -36,8 +36,7 @@ jobs:
       - name: Run Selenium TestNG Tests
         run: |
           mvn test \
-          -Dgroups=${{ github.event.inputs.tags || 'smoke' }} \
-          -DthreadCount=${{ github.event.inputs.threads || '4' }}
+          -Dcucumber.filter.tags="${{ github.event.inputs.tags || '@smoke' }}"
         continue-on-error: true
 
       # Upload Surefire Reports (default TestNG reports)

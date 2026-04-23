@@ -1,4 +1,4 @@
-@current
+@current @smoke
 Feature: OpenWeather Current Weather Data API
 
   Scenario Outline: OpenWeather Current Weather Data API
