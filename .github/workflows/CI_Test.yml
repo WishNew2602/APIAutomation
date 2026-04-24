@@ -6,7 +6,7 @@ on:
   pull_request:
     branches: [master]
   schedule:
-    - cron: '0 2 * * *'
+    - cron: '0 6 * * *'
   workflow_dispatch:
     inputs:
       tags:
@@ -35,8 +35,9 @@ jobs:
 
       - name: Run Selenium TestNG Tests
         run: |
-          mvn test \
-          -Dcucumber.filter.tags="${{ github.event.inputs.tags || '@smoke' }}"
+          mvn test
+#          \
+#          -Dcucumber.filter.tags="${{ github.event.inputs.tags || '@smoke' }}"
         continue-on-error: true
 
       # Upload Surefire Reports (default TestNG reports)
@@ -49,3 +50,5 @@ jobs:
             target/surefire-reports/
             target/test-output/
           retention-days: 7
+
+          #New comment
